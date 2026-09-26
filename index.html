@@ -72,15 +72,26 @@ button{font:inherit;cursor:pointer;border:0}
 #flash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:10}
 #flash.go{animation:flash .6s ease-out}
 @keyframes flash{0%{opacity:.95}100%{opacity:0}}
-.bar{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));transform:translate(-50%,30px);z-index:5;display:flex;gap:14px;align-items:center;padding:8px 16px;
-  background:#fdeed8cc;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:999px;box-shadow:0 8px 24px #5a0a1233;opacity:0;visibility:hidden;transition:.6s var(--ease)}
+.bar{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));transform:translate(-50%,30px);z-index:5;display:flex;gap:16px;align-items:center;padding:10px 18px;
+  background:linear-gradient(#fff6e6ee,#fde4c3ee);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:999px;
+  border:1.5px solid #e0a83a;box-shadow:0 10px 30px #5a0a1240,inset 0 1px 0 #fff;opacity:0;visibility:hidden;transition:.6s var(--ease);max-width:calc(100vw - 20px)}
 .bar.on{opacity:1;visibility:visible;transform:translate(-50%,0)}
-.shutter{width:68px;height:68px;border-radius:50%;background:#fff;border:6px solid var(--red);box-shadow:0 0 0 3px #fff;transition:transform .2s}
-.shutter:active{transform:scale(.88)}
-.round{width:50px;height:50px;border-radius:50%;background:#fff;font-size:22px;border:1.5px solid #b3121f44;color:var(--deep);display:grid;place-items:center}
-.round:active{transform:scale(.9)}
-.pill{white-space:nowrap;background:linear-gradient(135deg,#d01c2c,var(--red));color:#fff;height:50px;padding:0 20px;border-radius:999px;font-size:16px}
-.pill.ghost{background:#fff;color:var(--deep);border:1.5px solid #b3121f44}
+.bar svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.shutter{position:relative;width:76px;height:76px;border-radius:50%;padding:0;background:conic-gradient(from 0deg,#f2a900,#fff1b8,#f2a900,#c7810a,#f2a900);display:grid;place-items:center;
+  box-shadow:0 6px 18px #b3121f55;transition:transform .2s;animation:ring 6s linear infinite}
+@keyframes ring{to{filter:hue-rotate(0deg);transform:none}}
+.shutter::before{content:"";position:absolute;inset:-7px;border-radius:50%;border:2px solid #f2a90088;animation:ping 2s infinite}
+@keyframes ping{from{transform:scale(.9);opacity:1}to{transform:scale(1.25);opacity:0}}
+.shutter i{width:60px;height:60px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ef3b47,#b3121f 70%);display:grid;place-items:center;color:#fff;border:3px solid #fff}
+.shutter:active{transform:scale(.9)}.shutter:disabled{opacity:.6}
+.round{width:52px;height:52px;border-radius:50%;background:#fff;color:var(--red);border:1.5px solid #e0a83a;display:grid;place-items:center;padding:0;cursor:pointer;box-shadow:0 3px 10px #5a0a1226;transition:transform .2s,background .2s}
+.round:active{transform:scale(.88);background:#fde4c3}
+.pill{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;height:52px;padding:0 20px;border-radius:999px;font-size:16px;letter-spacing:.02em;transition:transform .2s;box-shadow:0 4px 12px #5a0a1233}
+.pill:active{transform:scale(.94)}
+.pill.save{background:linear-gradient(135deg,#d01c2c,#a30f1c);color:#fff;border:1.5px solid #f2a900}
+.pill.share{background:linear-gradient(135deg,#ffd25e,#f2a900);color:var(--deep);border:1.5px solid #c7810a}
+.pill.ghost{background:#fff;color:var(--red);border:1.5px solid #e0a83a}
+@media (max-width:380px){.pill{padding:0 14px;font-size:14px;gap:5px}.bar{gap:8px;padding:8px 10px}}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-iteration-count:1!important;transition-duration:.01s!important}}
 </style>
 </head>
@@ -127,14 +138,14 @@ button{font:inherit;cursor:pointer;border:0}
 <div id="flash"></div>
 
 <div class="bar" id="camBar">
-  <label class="round" title="Upload photo">🖼️<input type="file" id="file" accept="image/*" hidden></label>
-  <button class="shutter" id="shutter" aria-label="Take photo"></button>
-  <button class="round" id="flip" aria-label="Flip camera">🔄</button>
+  <label class="round" title="Upload photo" aria-label="Upload photo"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><input type="file" id="file" accept="image/*" hidden></label>
+  <button class="shutter" id="shutter" aria-label="Take photo"><i><svg viewBox="0 0 24 24" style="width:28px;height:28px"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg></i></button>
+  <button class="round" id="flip" aria-label="Flip camera"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 0115-6.7L21 8M21 3v5h-5M21 12a9 9 0 01-15 6.7L3 16M3 21v-5h5"/></svg></button>
 </div>
 <div class="bar" id="resBar">
-  <button class="pill" id="save">⬇ Save</button>
-  <button class="pill ghost" id="share">Share</button>
-  <button class="pill ghost" id="retake">Retake</button>
+  <button class="pill save" id="save"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></svg>Save</button>
+  <button class="pill share" id="share"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>Share</button>
+  <button class="pill ghost" id="retake"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 109-9 9 9 0 00-6.4 2.6L3 8M3 3v5h5"/></svg>Retake</button>
 </div>
 
 <script>
@@ -163,7 +174,7 @@ const burst=()=>{for(let i=0;i<80;i++)petal(true,innerWidth/2,innerHeight/2)};
 
 // camera
 async function startCam(){
-  $('msg').style.display='none';$('video').style.display='';$('shot').classList.remove('in');
+  $('msg').style.display='none';$('video').style.display='';$('shot').classList.remove('in');$('shot').style.opacity=0;
   if(stream)stream.getTracks().forEach(t=>t.stop());
   try{
     stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:facing,width:{ideal:1280},height:{ideal:1280}},audio:false});
@@ -201,7 +212,10 @@ $('save').onclick=()=>{if(url)URL.revokeObjectURL(url);url=URL.createObjectURL(l
 $('share').onclick=async()=>{const f=new File([lastBlob],'shubh-navratri.jpg',{type:'image/jpeg'});
   if(navigator.canShare&&navigator.canShare({files:[f]}))try{await navigator.share({files:[f],title:'Shubh Navratri'})}catch(e){}
   else $('save').click()};
-$('retake').onclick=()=>{$('resBar').classList.remove('on');$('camBar').classList.add('on');$('shot').classList.remove('in');$('shot').style.opacity=0;upload=null;startCam()};
+$('retake').onclick=()=>{$('resBar').classList.remove('on');$('shot').classList.remove('in');$('shot').style.opacity=0;$('video').style.display='';upload=null;
+  setTimeout(()=>$('camBar').classList.add('on'),300);
+  const live=stream&&stream.getVideoTracks().some(t=>t.readyState==='live');
+  if(live){const v=$('video');v.srcObject=null;v.srcObject=stream;v.play().catch(startCam)}else startCam()};
 </script>
 </body>
 </html>
