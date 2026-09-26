@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fde4c3">
+<title>Shubh Navratri Photo Booth</title>
+<style>
+:root{--cream:#fde4c3;--red:#b3121f;--deep:#5a0a12;--ease:cubic-bezier(.22,1,.36,1)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--cream);color:var(--deep);font-family:Georgia,'Times New Roman',serif;overflow:hidden;touch-action:manipulation}
+button{font:inherit;cursor:pointer;border:0}
+
+/* The frame lives in a fixed 899x1599 coordinate space, scaled by JS to COVER the screen */
+#fit{position:fixed;left:50%;top:50%;width:899px;height:1599px;transform-origin:center;z-index:0}
+#stage{position:absolute;inset:0;animation:enter 1.6s var(--ease) both}
+@keyframes enter{from{opacity:0;transform:scale(1.35);filter:blur(14px)}to{opacity:1;transform:none;filter:none}}
+#stage>img{position:absolute;inset:0;width:100%;height:100%;display:block}
+
+/* garlands: copies of the frame swaying from the top */
+.garland{position:absolute;top:0;height:504px;background-repeat:no-repeat;transform-origin:50% 0;animation:drop 1.8s .4s var(--ease) both,sway 4.5s 2.2s ease-in-out infinite}
+.garland.l{left:0;width:110px;background-image:url(garland-l.png)}
+.garland.r{left:790px;width:109px;background-image:url(garland-r.png)}
+@keyframes drop{from{transform:translateY(-520px)}}
+@keyframes sway{0%,100%{transform:rotate(-1.6deg)}50%{transform:rotate(1.6deg)}}
+
+/* glows */
+.glow{position:absolute;border-radius:50%;pointer-events:none;mix-blend-mode:screen}
+.diya{width:90px;height:90px;background:radial-gradient(circle,#ffd45ecc,#ff8a0055 45%,transparent 70%);animation:flick 1.3s infinite alternate ease-in-out}
+@keyframes flick{from{opacity:.35;transform:scale(.85)}to{opacity:1;transform:scale(1.15)}}
+.aura{background:radial-gradient(circle,#ffe08aaa,#ffb30044 45%,transparent 70%);animation:breathe 3.6s infinite ease-in-out}
+@keyframes breathe{0%,100%{opacity:.25;transform:scale(.9)}50%{opacity:.95;transform:scale(1.12)}}
+.spark{position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;pointer-events:none;
+  background:radial-gradient(circle,#fff 0,#fff7 18%,transparent 45%),conic-gradient(from 0deg,transparent 0 44%,#fff 48% 52%,transparent 56% 94%,#fff 98%,transparent 100%);
+  -webkit-mask:radial-gradient(circle,#000 30%,transparent 70%);mask:radial-gradient(circle,#000 30%,transparent 70%);
+  animation:twinkle 2.4s infinite ease-in-out;opacity:0;mix-blend-mode:screen}
+@keyframes twinkle{0%,100%{opacity:0;transform:scale(.2) rotate(0)}50%{opacity:1;transform:scale(1.5) rotate(90deg)}}
+.sweep{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.sweep::after{content:"";position:absolute;top:-10%;left:-60%;width:35%;height:120%;background:linear-gradient(90deg,transparent,#fff9,transparent);transform:skewX(-18deg);animation:sweep 6s 2s infinite;mix-blend-mode:soft-light}
+@keyframes sweep{0%{left:-60%}35%,100%{left:140%}}
+.title-shimmer{position:absolute;left:190px;top:160px;width:540px;height:150px;overflow:hidden;pointer-events:none;
+  -webkit-mask:linear-gradient(#000,#000);}
+.title-shimmer::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 40%,#fff8 50%,transparent 60%);background-size:250% 100%;animation:shim 3.5s 1.5s infinite;mix-blend-mode:overlay}
+@keyframes shim{from{background-position:120% 0}to{background-position:-120% 0}}
+
+/* photo window */
+.win{position:absolute;left:237px;top:403px;width:409px;height:723px;overflow:hidden;background:#1a0a08;animation:winin 1.2s .9s var(--ease) both}
+@keyframes winin{from{clip-path:circle(0 at 50% 50%)}to{clip-path:circle(75% at 50% 50%)}}
+.win video,.win .shot{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.mirror{transform:scaleX(-1)}
+.shot{opacity:0;pointer-events:none}
+.shot.in{animation:shotin .9s var(--ease) both}
+@keyframes shotin{from{opacity:0;transform:scale(1.5) rotate(-6deg)}to{opacity:1;transform:none}}
+.intro{position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,#fff3df,#fde4c3 70%,#f7c996);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;
+  transition:clip-path .9s var(--ease),opacity .9s;clip-path:circle(150% at 50% 88%);z-index:3}
+.intro.gone{clip-path:circle(0% at 50% 88%);opacity:0;pointer-events:none}
+.intro h2{font-size:46px;margin:0 0 10px;color:var(--red);line-height:1.1}
+.intro p{font-size:24px;font-style:italic;margin:0 0 34px}
+.btn{background:linear-gradient(135deg,#d01c2c,var(--red));color:#fff;padding:0 40px;height:84px;border-radius:999px;font-size:30px;box-shadow:0 10px 26px #b3121f66;position:relative;overflow:hidden;animation:pulse 2s infinite}
+.btn::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(90deg,transparent,#fff8,transparent);transform:skewX(-20deg);animation:shine 3s infinite}
+@keyframes shine{to{left:130%}}
+@keyframes pulse{0%{box-shadow:0 0 0 0 #b3121f88}70%,100%{box-shadow:0 0 0 30px #b3121f00}}
+.diya-ico{font-size:70px;margin-bottom:10px;animation:bob 2.4s infinite ease-in-out}
+@keyframes bob{50%{transform:translateY(-12px)}}
+#count{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:260px;color:#fff;text-shadow:0 4px 30px #000a;pointer-events:none;z-index:2}
+#count.tick{animation:tick .9s var(--ease)}
+@keyframes tick{from{transform:scale(2.4);opacity:0}30%{opacity:1}to{transform:scale(.8);opacity:0}}
+#msg{position:absolute;left:20px;right:20px;top:20px;text-align:center;font-size:22px;padding:14px;background:#fffd;border-radius:14px;display:none;z-index:2}
+
+/* screen-space UI */
+#fx{position:fixed;inset:0;z-index:1;pointer-events:none;width:100%;height:100%}
+#flash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:10}
+#flash.go{animation:flash .6s ease-out}
+@keyframes flash{0%{opacity:.95}100%{opacity:0}}
+.bar{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));transform:translate(-50%,30px);z-index:5;display:flex;gap:14px;align-items:center;padding:8px 16px;
+  background:#fdeed8cc;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:999px;box-shadow:0 8px 24px #5a0a1233;opacity:0;visibility:hidden;transition:.6s var(--ease)}
+.bar.on{opacity:1;visibility:visible;transform:translate(-50%,0)}
+.shutter{width:68px;height:68px;border-radius:50%;background:#fff;border:6px solid var(--red);box-shadow:0 0 0 3px #fff;transition:transform .2s}
+.shutter:active{transform:scale(.88)}
+.round{width:50px;height:50px;border-radius:50%;background:#fff;font-size:22px;border:1.5px solid #b3121f44;color:var(--deep);display:grid;place-items:center}
+.round:active{transform:scale(.9)}
+.pill{white-space:nowrap;background:linear-gradient(135deg,#d01c2c,var(--red));color:#fff;height:50px;padding:0 20px;border-radius:999px;font-size:16px}
+.pill.ghost{background:#fff;color:var(--deep);border:1.5px solid #b3121f44}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-iteration-count:1!important;transition-duration:.01s!important}}
+</style>
+</head>
+<body>
+<div id="fit"><div id="stage">
+  <img src="frame-base.jpg" alt="Shubh Navratri frame">
+  <div class="garland l"></div><div class="garland r"></div>
+
+  <!-- goddess, kalash, mukut glows -->
+  <div class="glow aura" style="left:250px;top:1230px;width:340px;height:340px"></div>
+  <div class="glow aura" style="left:700px;top:1360px;width:200px;height:200px;animation-delay:.8s"></div>
+  <div class="glow aura" style="left:340px;top:100px;width:170px;height:200px;animation-delay:1.4s"></div>
+  <!-- diyas -->
+  <div class="glow diya" style="left:815px;top:505px"></div>
+  <div class="glow diya" style="left:790px;top:610px;animation-delay:.4s"></div>
+  <div class="glow diya" style="left:760px;top:960px;animation-delay:.2s"></div>
+  <div class="glow diya" style="left:770px;top:1000px;animation-delay:.7s"></div>
+  <!-- twinkles on lotuses -->
+  <i class="spark" style="left:441px;top:340px"></i>
+  <i class="spark" style="left:441px;top:1190px;animation-delay:.8s"></i>
+  <i class="spark" style="left:178px;top:655px;animation-delay:1.6s"></i>
+  <i class="spark" style="left:705px;top:655px;animation-delay:.4s"></i>
+  <i class="spark" style="left:180px;top:945px;animation-delay:1.2s"></i>
+  <i class="spark" style="left:700px;top:945px;animation-delay:2s"></i>
+  <i class="spark" style="left:422px;top:230px;animation-delay:1s"></i>
+  <div class="title-shimmer"></div>
+  <div class="sweep"></div>
+
+  <div class="win">
+    <video id="video" autoplay playsinline muted></video>
+    <img class="shot" id="shot" alt="">
+    <div id="count"></div>
+    <div id="msg"></div>
+    <div class="intro" id="intro">
+      <div class="diya-ico">🪔</div>
+      <h2>Shubh<br>Navratri</h2>
+      <p>Step into the frame</p>
+      <button class="btn" id="start">Open Camera</button>
+    </div>
+  </div>
+</div></div>
+
+<canvas id="fx"></canvas>
+<div id="flash"></div>
+
+<div class="bar" id="camBar">
+  <label class="round" title="Upload photo">🖼️<input type="file" id="file" accept="image/*" hidden></label>
+  <button class="shutter" id="shutter" aria-label="Take photo"></button>
+  <button class="round" id="flip" aria-label="Flip camera">🔄</button>
+</div>
+<div class="bar" id="resBar">
+  <button class="pill" id="save">⬇ Save</button>
+  <button class="pill ghost" id="share">Share</button>
+  <button class="pill ghost" id="retake">Retake</button>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const W=899,H=1599,R={x:237,y:403,w:409,h:723};
+let facing='user',stream=null,upload=null,lastBlob=null,url=null;
+
+// cover the whole screen with the frame
+function fit(){const s=Math.min(innerWidth/W,innerHeight/H);$('fit').style.transform=`translate(-50%,-50%) scale(${s})`}
+fit();addEventListener('resize',fit);
+
+// petals
+const cv=$('fx'),cx=cv.getContext('2d');let P=[];
+function size(){cv.width=innerWidth*devicePixelRatio;cv.height=innerHeight*devicePixelRatio}size();addEventListener('resize',size);
+const cols=['#f2a900','#ff7a00','#d01c2c','#ffd25e'];
+function petal(b,x,y){const d=devicePixelRatio;P.push(b?{x:x*d,y:y*d,vx:(Math.random()-.5)*16*d,vy:(-Math.random()*14-4)*d,g:.4*d,r:(4+Math.random()*6)*d,c:cols[Math.random()*4|0],rot:Math.random()*6,vr:(Math.random()-.5)*.4,life:90}
+ :{x:Math.random()*cv.width,y:-20*d,vx:(Math.random()-.5)*d,vy:(1+Math.random()*1.5)*d,g:0,r:(5+Math.random()*5)*d,c:cols[Math.random()*4|0],rot:Math.random()*6,vr:(Math.random()-.5)*.06,life:1e9,sway:Math.random()*6})}
+(function loop(){cx.clearRect(0,0,cv.width,cv.height);
+ if(P.length<35&&Math.random()<.07)petal();
+ P=P.filter(p=>p.life>0&&p.y<cv.height+30);
+ for(const p of P){p.vy+=p.g;p.x+=p.vx+(p.sway?Math.sin(p.y/60+p.sway)*.8:0);p.y+=p.vy;p.rot+=p.vr;p.life--;
+  cx.save();cx.translate(p.x,p.y);cx.rotate(p.rot);cx.globalAlpha=p.life<20?p.life/20:.85;cx.fillStyle=p.c;
+  cx.beginPath();cx.ellipse(0,0,p.r,p.r*.55,0,0,7);cx.fill();cx.restore()}
+ requestAnimationFrame(loop)})();
+const burst=()=>{for(let i=0;i<80;i++)petal(true,innerWidth/2,innerHeight/2)};
+
+// camera
+async function startCam(){
+  $('msg').style.display='none';$('video').style.display='';$('shot').classList.remove('in');
+  if(stream)stream.getTracks().forEach(t=>t.stop());
+  try{
+    stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:facing,width:{ideal:1280},height:{ideal:1280}},audio:false});
+    $('video').srcObject=stream;$('video').classList.toggle('mirror',facing==='user');upload=null;
+  }catch(e){$('msg').style.display='block';$('msg').textContent='Camera unavailable. Tap 🖼️ to choose a photo instead.'}
+}
+$('start').onclick=()=>{$('intro').classList.add('gone');$('camBar').classList.add('on');burst();startCam()};
+$('flip').onclick=()=>{facing=facing==='user'?'environment':'user';startCam()};
+$('file').onchange=e=>{const f=e.target.files[0];if(!f)return;const img=new Image();img.onload=()=>{upload=img;
+  if(stream)stream.getTracks().forEach(t=>t.stop());$('msg').style.display='none';
+  $('video').style.display='none';$('shot').src=img.src;$('shot').classList.remove('in');$('shot').style.opacity=1};img.src=URL.createObjectURL(f)};
+
+const countdown=()=>new Promise(res=>{let n=3;const c=$('count');
+  (function t(){if(!n){c.textContent='';return res()}c.textContent=n;c.classList.remove('tick');void c.offsetWidth;c.classList.add('tick');n--;setTimeout(t,900)})()});
+
+$('shutter').onclick=async()=>{
+  $('shutter').disabled=true;await countdown();$('shutter').disabled=false;
+  const frame=new Image();frame.src='frame.jpg';await frame.decode().catch(()=>{});
+  const c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d');
+  g.fillStyle='#000';g.fillRect(R.x,R.y,R.w,R.h);
+  const v=$('video'),src=upload||v,sw=upload?upload.naturalWidth:v.videoWidth,sh=upload?upload.naturalHeight:v.videoHeight;
+  if(sw){const s=Math.max(R.w/sw,R.h/sh),dw=sw*s,dh=sh*s;g.save();g.beginPath();g.rect(R.x,R.y,R.w,R.h);g.clip();
+    if(!upload&&facing==='user'){g.translate(R.x+R.w/2,0);g.scale(-1,1);g.drawImage(src,-dw/2,R.y+(R.h-dh)/2,dw,dh)}
+    else g.drawImage(src,R.x+(R.w-dw)/2,R.y+(R.h-dh)/2,dw,dh);g.restore()}
+  g.save();g.beginPath();g.rect(0,0,W,H);g.rect(R.x,R.y,R.w,R.h);g.clip('evenodd');g.drawImage(frame,0,0,W,H);g.restore();
+  $('flash').classList.remove('go');void $('flash').offsetWidth;$('flash').classList.add('go');burst();
+  c.toBlob(b=>{lastBlob=b;
+    // freeze the taken photo inside the live, animated frame
+    const cropC=document.createElement('canvas');cropC.width=R.w;cropC.height=R.h;cropC.getContext('2d').drawImage(c,R.x,R.y,R.w,R.h,0,0,R.w,R.h);
+    $('shot').src=cropC.toDataURL('image/jpeg',.92);$('shot').style.opacity='';
+    $('shot').classList.remove('in');void $('shot').offsetWidth;$('shot').classList.add('in');
+    $('camBar').classList.remove('on');setTimeout(()=>$('resBar').classList.add('on'),500)},'image/jpeg',.93);
+};
+$('save').onclick=()=>{if(url)URL.revokeObjectURL(url);url=URL.createObjectURL(lastBlob);const a=document.createElement('a');a.href=url;a.download='shubh-navratri.jpg';a.click()};
+$('share').onclick=async()=>{const f=new File([lastBlob],'shubh-navratri.jpg',{type:'image/jpeg'});
+  if(navigator.canShare&&navigator.canShare({files:[f]}))try{await navigator.share({files:[f],title:'Shubh Navratri'})}catch(e){}
+  else $('save').click()};
+$('retake').onclick=()=>{$('resBar').classList.remove('on');$('camBar').classList.add('on');$('shot').classList.remove('in');$('shot').style.opacity=0;upload=null;startCam()};
+</script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+{
+  "name": "navratri-aol",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Shubh Navratri photo booth - static frontend-only site",
+  "scripts": { "dev": "python3 -m http.server 8000", "deploy": "vercel --prod" }
+}
