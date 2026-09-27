@@ -92,6 +92,7 @@ button{font:inherit;cursor:pointer;border:0}
 .pill.share{background:linear-gradient(135deg,#ffd25e,#f2a900);color:var(--deep);border:1.5px solid #c7810a}
 .pill.ghost{background:#fff;color:var(--red);border:1.5px solid #e0a83a}
 @media (max-width:380px){.pill{padding:0 14px;font-size:14px;gap:5px}.bar{gap:8px;padding:8px 10px}}
+
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-iteration-count:1!important;transition-duration:.01s!important}}
 </style>
 </head>
@@ -209,8 +210,11 @@ $('shutter').onclick=async()=>{
     $('camBar').classList.remove('on');setTimeout(()=>$('resBar').classList.add('on'),500)},'image/jpeg',.93);
 };
 $('save').onclick=()=>{if(url)URL.revokeObjectURL(url);url=URL.createObjectURL(lastBlob);const a=document.createElement('a');a.href=url;a.download='shubh-navratri.jpg';a.click()};
+const SHARE_MSG="🪔 Shubh Navratri! I'm attending the Navratri Utsav at TOK Pitampura, 16–18 Oct — are you in? Also made this festive photo frame, try it out:";
 $('share').onclick=async()=>{const f=new File([lastBlob],'shubh-navratri.jpg',{type:'image/jpeg'});
-  if(navigator.canShare&&navigator.canShare({files:[f]}))try{await navigator.share({files:[f],title:'Shubh Navratri'})}catch(e){}
+  const text=SHARE_MSG+'\n'+location.origin+'/';
+  if(navigator.canShare&&navigator.canShare({files:[f]}))try{await navigator.share({files:[f],title:'Shubh Navratri',text})}catch(e){}
+  else if(navigator.share)try{await navigator.share({title:'Shubh Navratri',text})}catch(e){}
   else $('save').click()};
 $('retake').onclick=()=>{$('resBar').classList.remove('on');$('shot').classList.remove('in');$('shot').style.opacity=0;$('video').style.display='';upload=null;
   setTimeout(()=>$('camBar').classList.add('on'),300);
