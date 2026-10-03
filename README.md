@@ -19,4 +19,4 @@ Or push to GitHub and import the repo at vercel.com/new (Framework: Other, no bu
 ## Files
 - `index.html` – the whole app (HTML/CSS/JS)
 - `frame.jpg` – original frame (used for the saved photo)
-- `frame-base.jpg`, `garland-l.png`, `garland-r.png`, `banner.png` – frame split so the garlands animate and the message banner sits on top of the photo
+- `frame-base.jpg`, `garland-l.png`, `garland-r.png`, `banner.png`, `garland-tile-l.png`, `garland-tile-r.png` – frame split so the garlands animate and the message banner sits on top of the photo

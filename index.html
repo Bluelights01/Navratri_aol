@@ -21,6 +21,9 @@ button{font:inherit;cursor:pointer;border:0}
 .garland{position:absolute;top:0;height:470px;background-repeat:no-repeat;transform-origin:50% 0;animation:drop 1.8s .4s var(--ease) both,sway 4.5s 2.2s ease-in-out infinite}
 .garland.l{left:0;width:112px;background-image:url(garland-l.png)}
 .garland.r{left:945px;width:135px;background-image:url(garland-r.png)}
+.garland::before{content:"";position:absolute;left:0;width:100%;bottom:100%;height:1400px;background-repeat:repeat-y;background-position:0 100%}
+.garland.l::before{background-image:url(garland-tile-l.png)}
+.garland.r::before{background-image:url(garland-tile-r.png)}
 @keyframes drop{from{transform:translateY(-500px)}}
 @keyframes sway{0%,100%{transform:rotate(-1.6deg)}50%{transform:rotate(1.6deg)}}
 
@@ -94,6 +97,7 @@ button{font:inherit;cursor:pointer;border:0}
 .pill.share{background:linear-gradient(135deg,#ffd25e,#f2a900);color:var(--deep);border:1.5px solid #c7810a}
 .pill.ghost{background:#fff;color:var(--red);border:1.5px solid #e0a83a}
 @media (max-width:380px){.pill{padding:0 14px;font-size:14px;gap:5px}.bar{gap:8px;padding:8px 10px}}
+@media (max-width:340px){.pill{padding:0 10px;font-size:13px;gap:4px;height:46px}.pill svg{width:18px;height:18px}.bar{gap:6px;padding:8px 10px}.shutter{width:68px;height:68px}.shutter i{width:52px;height:52px}.round{width:46px;height:46px}}
 
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-iteration-count:1!important;transition-duration:.01s!important}}
 </style>
