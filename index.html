@@ -11,17 +11,17 @@
 html,body{margin:0;height:100%;background:var(--cream);color:var(--deep);font-family:Georgia,'Times New Roman',serif;overflow:hidden;touch-action:manipulation}
 button{font:inherit;cursor:pointer;border:0}
 
-/* The frame lives in a fixed 899x1599 coordinate space, scaled by JS to COVER the screen */
-#fit{position:fixed;left:50%;top:50%;width:899px;height:1599px;transform-origin:center;z-index:0}
+/* The frame lives in a fixed 1080x1920 coordinate space, scaled by JS to COVER the screen */
+#fit{position:fixed;left:50%;top:50%;width:1080px;height:1920px;transform-origin:center;z-index:0}
 #stage{position:absolute;inset:0;animation:enter 1.6s var(--ease) both}
 @keyframes enter{from{opacity:0;transform:scale(1.35);filter:blur(14px)}to{opacity:1;transform:none;filter:none}}
 #stage>img{position:absolute;inset:0;width:100%;height:100%;display:block}
 
 /* garlands: copies of the frame swaying from the top */
-.garland{position:absolute;top:0;height:504px;background-repeat:no-repeat;transform-origin:50% 0;animation:drop 1.8s .4s var(--ease) both,sway 4.5s 2.2s ease-in-out infinite}
-.garland.l{left:0;width:110px;background-image:url(garland-l.png)}
-.garland.r{left:790px;width:109px;background-image:url(garland-r.png)}
-@keyframes drop{from{transform:translateY(-520px)}}
+.garland{position:absolute;top:0;height:470px;background-repeat:no-repeat;transform-origin:50% 0;animation:drop 1.8s .4s var(--ease) both,sway 4.5s 2.2s ease-in-out infinite}
+.garland.l{left:0;width:112px;background-image:url(garland-l.png)}
+.garland.r{left:945px;width:135px;background-image:url(garland-r.png)}
+@keyframes drop{from{transform:translateY(-500px)}}
 @keyframes sway{0%,100%{transform:rotate(-1.6deg)}50%{transform:rotate(1.6deg)}}
 
 /* glows */
@@ -38,16 +38,18 @@ button{font:inherit;cursor:pointer;border:0}
 .sweep{position:absolute;inset:0;overflow:hidden;pointer-events:none}
 .sweep::after{content:"";position:absolute;top:-10%;left:-60%;width:35%;height:120%;background:linear-gradient(90deg,transparent,#fff9,transparent);transform:skewX(-18deg);animation:sweep 6s 2s infinite;mix-blend-mode:soft-light}
 @keyframes sweep{0%{left:-60%}35%,100%{left:140%}}
-.title-shimmer{position:absolute;left:190px;top:160px;width:540px;height:150px;overflow:hidden;pointer-events:none;
+.title-shimmer{position:absolute;left:230px;top:190px;width:640px;height:180px;overflow:hidden;pointer-events:none;
   -webkit-mask:linear-gradient(#000,#000);}
 .title-shimmer::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 40%,#fff8 50%,transparent 60%);background-size:250% 100%;animation:shim 3.5s 1.5s infinite;mix-blend-mode:overlay}
 @keyframes shim{from{background-position:120% 0}to{background-position:-120% 0}}
 
 /* photo window */
-.win{position:absolute;left:237px;top:403px;width:409px;height:723px;overflow:hidden;background:#1a0a08;animation:winin 1.2s .9s var(--ease) both}
+.win{position:absolute;left:284px;top:483px;width:493px;height:869px;overflow:hidden;background:#1a0a08;animation:winin 1.2s .9s var(--ease) both}
 @keyframes winin{from{clip-path:circle(0 at 50% 50%)}to{clip-path:circle(75% at 50% 50%)}}
 .win video,.win .shot{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 .mirror{transform:scaleX(-1)}
+.banner{position:absolute;left:1px;top:748px;width:492px;height:121px;z-index:1;pointer-events:none;animation:bannerin 1s 1.6s var(--ease) both}
+@keyframes bannerin{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
 .shot{opacity:0;pointer-events:none}
 .shot.in{animation:shotin .9s var(--ease) both}
 @keyframes shotin{from{opacity:0;transform:scale(1.5) rotate(-6deg)}to{opacity:1;transform:none}}
@@ -102,28 +104,28 @@ button{font:inherit;cursor:pointer;border:0}
   <div class="garland l"></div><div class="garland r"></div>
 
   <!-- goddess, kalash, mukut glows -->
-  <div class="glow aura" style="left:250px;top:1230px;width:340px;height:340px"></div>
-  <div class="glow aura" style="left:700px;top:1360px;width:200px;height:200px;animation-delay:.8s"></div>
-  <div class="glow aura" style="left:340px;top:100px;width:170px;height:200px;animation-delay:1.4s"></div>
-  <!-- diyas -->
-  <div class="glow diya" style="left:815px;top:505px"></div>
-  <div class="glow diya" style="left:790px;top:610px;animation-delay:.4s"></div>
-  <div class="glow diya" style="left:760px;top:960px;animation-delay:.2s"></div>
-  <div class="glow diya" style="left:770px;top:1000px;animation-delay:.7s"></div>
-  <!-- twinkles on lotuses -->
-  <i class="spark" style="left:441px;top:340px"></i>
-  <i class="spark" style="left:441px;top:1190px;animation-delay:.8s"></i>
-  <i class="spark" style="left:178px;top:655px;animation-delay:1.6s"></i>
-  <i class="spark" style="left:705px;top:655px;animation-delay:.4s"></i>
-  <i class="spark" style="left:180px;top:945px;animation-delay:1.2s"></i>
-  <i class="spark" style="left:700px;top:945px;animation-delay:2s"></i>
-  <i class="spark" style="left:422px;top:230px;animation-delay:1s"></i>
+  <div class="glow aura" style="left:330px;top:1560px;width:420px;height:360px"></div>
+  <div class="glow aura" style="left:835px;top:1640px;width:245px;height:245px;animation-delay:.8s"></div>
+  <div class="glow aura" style="left:410px;top:110px;width:200px;height:250px;animation-delay:1.4s"></div>
+  <!-- twinkles on lotuses, mukut, tulips -->
+  <i class="spark" style="left:530px;top:410px"></i>
+  <i class="spark" style="left:530px;top:1425px;animation-delay:.8s"></i>
+  <i class="spark" style="left:215px;top:790px;animation-delay:1.6s"></i>
+  <i class="spark" style="left:848px;top:790px;animation-delay:.4s"></i>
+  <i class="spark" style="left:218px;top:1135px;animation-delay:1.2s"></i>
+  <i class="spark" style="left:845px;top:1135px;animation-delay:2s"></i>
+  <i class="spark" style="left:505px;top:245px;animation-delay:1s"></i>
+  <i class="spark" style="left:62px;top:625px;animation-delay:.6s"></i>
+  <i class="spark" style="left:1002px;top:612px;animation-delay:1.8s"></i>
+  <i class="spark" style="left:68px;top:1340px;animation-delay:1.4s"></i>
+  <i class="spark" style="left:1010px;top:1330px;animation-delay:.2s"></i>
   <div class="title-shimmer"></div>
   <div class="sweep"></div>
 
   <div class="win">
     <video id="video" autoplay playsinline muted></video>
     <img class="shot" id="shot" alt="">
+    <img class="banner" src="banner.png" alt="">
     <div id="count"></div>
     <div id="msg"></div>
     <div class="intro" id="intro">
@@ -151,7 +153,7 @@ button{font:inherit;cursor:pointer;border:0}
 
 <script>
 const $=id=>document.getElementById(id);
-const W=899,H=1599,R={x:237,y:403,w:409,h:723};
+const W=1080,H=1920,R={x:284,y:483,w:493,h:869},B={x:285,y:1231};
 let facing='user',stream=null,upload=null,lastBlob=null,url=null;
 
 // cover the whole screen with the frame
@@ -193,14 +195,14 @@ const countdown=()=>new Promise(res=>{let n=3;const c=$('count');
 
 $('shutter').onclick=async()=>{
   $('shutter').disabled=true;await countdown();$('shutter').disabled=false;
-  const frame=new Image();frame.src='frame.jpg';await frame.decode().catch(()=>{});
+  const frame=new Image();frame.src='frame.jpg';const ban=new Image();ban.src='banner.png';await Promise.all([frame.decode(),ban.decode()]).catch(()=>{});
   const c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d');
   g.fillStyle='#000';g.fillRect(R.x,R.y,R.w,R.h);
   const v=$('video'),src=upload||v,sw=upload?upload.naturalWidth:v.videoWidth,sh=upload?upload.naturalHeight:v.videoHeight;
   if(sw){const s=Math.max(R.w/sw,R.h/sh),dw=sw*s,dh=sh*s;g.save();g.beginPath();g.rect(R.x,R.y,R.w,R.h);g.clip();
     if(!upload&&facing==='user'){g.translate(R.x+R.w/2,0);g.scale(-1,1);g.drawImage(src,-dw/2,R.y+(R.h-dh)/2,dw,dh)}
     else g.drawImage(src,R.x+(R.w-dw)/2,R.y+(R.h-dh)/2,dw,dh);g.restore()}
-  g.save();g.beginPath();g.rect(0,0,W,H);g.rect(R.x,R.y,R.w,R.h);g.clip('evenodd');g.drawImage(frame,0,0,W,H);g.restore();
+  g.save();g.beginPath();g.rect(0,0,W,H);g.rect(R.x,R.y,R.w,R.h);g.clip('evenodd');g.drawImage(frame,0,0,W,H);g.restore();g.drawImage(ban,B.x,B.y);
   $('flash').classList.remove('go');void $('flash').offsetWidth;$('flash').classList.add('go');burst();
   c.toBlob(b=>{lastBlob=b;
     // freeze the taken photo inside the live, animated frame
